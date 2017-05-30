@@ -1,10 +1,8 @@
 package list
 
 import (
-	"fmt"
-	"testing"
-
 	"github.com/srirampatil/stl"
+	"testing"
 )
 
 type IntComparable int
@@ -72,15 +70,17 @@ func TestList(t *testing.T) {
 		t.Fatalf("Expected 10, received %v", v)
 	}
 
-	for it := list.Begin(); it != nil; it = it.Next() {
-		fmt.Println(it)
-	}
+	/*
+		for it := list.Begin(); it != nil; it = it.Next() {
+			fmt.Println(it)
+		}
 
-	fmt.Println()
-	list.Reverse()
-	for it := list.Begin(); it != nil; it = it.Next() {
-		fmt.Println(it)
-	}
+		fmt.Println()
+		list.Reverse()
+		for it := list.Begin(); it != nil; it = it.Next() {
+			fmt.Println(it)
+		}
+	*/
 
 	if list.Empty() {
 		t.Fatalf("Expected list, received empty")

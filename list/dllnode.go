@@ -7,20 +7,14 @@ import (
 // DLLNode represents a node in a doubly linked list. It implements the Iterator
 // interface.
 type DLLNode struct {
-	Value stl.Comparable
-	N, P  *DLLNode
+	value      stl.Comparable
+	next, prev *DLLNode
 }
 
-func (node *DLLNode) HasNext() bool {
-	if node == nil {
-		return false
-	}
-	return node.N != nil
+func (node DLLNode) Value() stl.Comparable {
+	return node.value
 }
 
-func (node *DLLNode) Next() stl.Iterator {
-	if node == nil {
-		return nil
-	}
-	return node.N
+func (node *DLLNode) SetValue(v stl.Comparable) {
+	node.value = v
 }
