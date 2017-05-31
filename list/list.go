@@ -26,9 +26,15 @@ type IList interface {
 	// PopFront removes the first object from IList.
 	PopFront()
 
-	// PopBack removes the last object in IList
+	// PopBack removes the last object in IList.
 	PopBack()
 
-	// Reverse reverses the IList
+	// Reverse reverses the IList.
 	Reverse()
+
+	// Swap the lists. Size of the lists can be different.
+	Swap(rhs IList) error
+
+	// Clear removes all the elements from the list.
+	Clear()
 }

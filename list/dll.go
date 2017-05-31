@@ -64,8 +64,7 @@ func removeAfter(after *DLLNode) {
 	after.next = nextNode.next
 	nextNode.next.prev = after
 
-	nextNode.next = nil
-	nextNode.prev = nil
+	nextNode.next, nextNode.prev = nil, nil
 }
 
 func removeBefore(before *DLLNode) {
@@ -127,7 +126,7 @@ func (list *DLL) End() stl.Iterator {
 */
 
 // Reverse reverses the DLL.
-// Complexity: Linear in DLL size
+// Complexity: Linear in size of DLL
 func (list *DLL) Reverse() {
 	if list.Empty() {
 		return
@@ -146,5 +145,26 @@ func (list *DLL) Reverse() {
 		if node == list.sentinel {
 			break
 		}
+	}
+}
+
+// Swap swaps two DLLs.
+// Complexity: O(1).
+func (lhs *DLL) Swap(r IList) error {
+	rhs, ok := r.(*DLL)
+	if !ok {
+		return stl.TypeMismatchError{lhs, r}
+	}
+
+	lhs.sentinel, rhs.sentinel = rhs.sentinel, lhs.sentinel
+	lhs.size, rhs.size = rhs.size, lhs.size
+	return nil
+}
+
+// Clear removes all the elements from DLL.
+// Complexity: Linear in size of DLL
+func (list *DLL) Clear() {
+	for !list.Empty() {
+		list.PopBack()
 	}
 }

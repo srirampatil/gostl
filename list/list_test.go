@@ -1,6 +1,7 @@
 package list
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 	"time"
@@ -27,28 +28,26 @@ func (lhs IntComparable) Compare(r stl.Comparable) (int, error) {
 	return 0, nil
 }
 
-var list *DLL
-
-func testNewDLL(t *testing.T) {
-	list = NewDLL()
-	if list == nil {
+func testNewDLL(t *testing.T, list **DLL) {
+	*list = NewDLL()
+	if *list == nil {
 		t.Fatalf("Could not allocate DLL")
 	}
 }
 
-func testEmpty(t *testing.T) {
+func testEmpty(t *testing.T, list *DLL) {
 	if !list.Empty() {
 		t.Fatalf("Expected empty list, received non-empty")
 	}
 }
 
-func testNotEmpty(t *testing.T) {
+func testNotEmpty(t *testing.T, list *DLL) {
 	if list.Empty() {
 		t.Fatalf("Expected non-empty list, received empty")
 	}
 }
 
-func testSize(t *testing.T, expected int) {
+func testSize(t *testing.T, list *DLL, expected int) {
 	if list.Size() != expected {
 		t.Fatalf("Expected size %d, received size %d", expected, list.Size())
 	}
@@ -66,12 +65,13 @@ func testComparable(t *testing.T, v stl.Comparable, expected stl.Comparable) {
 	}
 }
 
-func testFront(t *testing.T, expected stl.Comparable) {
+func testFront(t *testing.T, list *DLL, expected stl.Comparable) {
 	v := list.Front()
+	fmt.Printf("%v, %v", v, expected)
 	testComparable(t, v, expected)
 }
 
-func testBack(t *testing.T, expected stl.Comparable) {
+func testBack(t *testing.T, list *DLL, expected stl.Comparable) {
 	v := list.Back()
 	testComparable(t, v, expected)
 }
@@ -90,25 +90,26 @@ func TestList(t *testing.T) {
 		direction = !direction
 	}
 
-	testNewDLL(t)
-	testFront(t, nil)
-	testBack(t, nil)
-	testEmpty(t)
+	var list *DLL
+	testNewDLL(t, &list)
+	testFront(t, list, nil)
+	testBack(t, list, nil)
+	testEmpty(t, list)
 
 	for _, n := range numbers {
 		list.PushBack(IntComparable(n))
 	}
 
-	testFront(t, IntComparable(numbers[0]))
-	testBack(t, IntComparable(numbers[length-1]))
-	testNotEmpty(t)
-	testSize(t, length)
+	testFront(t, list, IntComparable(numbers[0]))
+	testBack(t, list, IntComparable(numbers[length-1]))
+	testNotEmpty(t, list)
+	testSize(t, list, length)
 
 	list.PopFront()
-	testFront(t, IntComparable(numbers[1]))
+	testFront(t, list, IntComparable(numbers[1]))
 
 	list.PopBack()
-	testBack(t, IntComparable(numbers[length-2]))
+	testBack(t, list, IntComparable(numbers[length-2]))
 
 	/*
 		for it := list.Begin(); it != nil; it = it.Next() {
@@ -122,23 +123,31 @@ func TestList(t *testing.T) {
 		}
 	*/
 
-	testNotEmpty(t)
-	for !list.Empty() {
-		list.PopBack()
-	}
-
-	testEmpty(t)
+	testNotEmpty(t, list)
+	list.Clear()
+	testEmpty(t, list)
 	list.PopBack()
 	list.PopFront()
 
 	list.PushFront(IntComparable(numbers[0]))
-	testFront(t, IntComparable(numbers[0]))
-	testNotEmpty(t)
+	testFront(t, list, IntComparable(numbers[0]))
+	testNotEmpty(t, list)
 
 	list.Reverse()
-	testNotEmpty(t)
+	testNotEmpty(t, list)
 	list.PopBack()
-	testEmpty(t)
+	testEmpty(t, list)
 	list.Reverse()
-	testEmpty(t)
+	testEmpty(t, list)
+
+	var list2 *DLL
+	testNewDLL(t, &list2)
+	for _, n := range numbers {
+		list2.PushBack(IntComparable(n))
+	}
+
+	testNotEmpty(t, list2)
+	list.Swap(list2)
+	testNotEmpty(t, list)
+	testEmpty(t, list2)
 }
