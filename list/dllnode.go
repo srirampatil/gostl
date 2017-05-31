@@ -14,7 +14,3 @@ type DLLNode struct {
 func (node DLLNode) Value() stl.Comparable {
 	return node.value
 }
-
-func (node *DLLNode) SetValue(v stl.Comparable) {
-	node.value = v
-}

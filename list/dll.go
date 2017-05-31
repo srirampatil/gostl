@@ -7,23 +7,25 @@ import (
 // DLL represents a doubly linked list and imlpements IList and Iterable
 // interfaces.
 type DLL struct {
-	head, tail *DLLNode
-	size       int
+	sentinel *DLLNode
+	size     int
 }
 
 // NewDLL creates a new doubly linked list (DLL).
 func NewDLL() (list *DLL) {
 	list = new(DLL)
-	list.head, list.tail = nil, nil
 	list.size = 0
+	list.sentinel = new(DLLNode)
+	list.sentinel.next = list.sentinel
+	list.sentinel.prev = list.sentinel
 	return
 }
 
 // Front returns the first object in DLL.
 // Complexity: O(1).
 func (list DLL) Front() stl.Comparable {
-	if list.head != nil {
-		return list.head.Value()
+	if list.sentinel.next != list.sentinel {
+		return list.sentinel.next.Value()
 	}
 	return nil
 }
@@ -31,8 +33,8 @@ func (list DLL) Front() stl.Comparable {
 // Back returns the last object in DLL.
 // Complexity: O(1).
 func (list DLL) Back() stl.Comparable {
-	if list.tail != nil {
-		return list.tail.Value()
+	if list.sentinel.prev != list.sentinel {
+		return list.sentinel.prev.Value()
 	}
 	return nil
 }
@@ -49,17 +51,36 @@ func (list DLL) Size() int {
 	return list.size
 }
 
+func insertAfter(node *DLLNode, after *DLLNode) {
+	node.prev = after
+	node.next = after.next
+
+	after.next.prev = node
+	after.next = node
+}
+
+func removeAfter(after *DLLNode) {
+	nextNode := after.next
+	after.next = nextNode.next
+	nextNode.next.prev = after
+
+	nextNode.next = nil
+	nextNode.prev = nil
+}
+
+func removeBefore(before *DLLNode) {
+	prevNode := before.prev
+	before.prev = prevNode.prev
+	prevNode.prev.next = before
+
+	prevNode.prev, prevNode.next = nil, nil
+}
+
 // PushBack adds an object at the end of DLL.
 // Complexity: O(1)
 func (list *DLL) PushBack(v stl.Comparable) {
 	node := DLLNode{v, nil, nil}
-	if list.head == nil {
-		list.head = &node
-	} else {
-		list.tail.next = &node
-		node.prev = list.tail
-	}
-	list.tail = &node
+	insertAfter(&node, list.sentinel.prev)
 	list.size++
 }
 
@@ -67,48 +88,28 @@ func (list *DLL) PushBack(v stl.Comparable) {
 // Complexity: O(1).
 func (list *DLL) PushFront(v stl.Comparable) {
 	node := DLLNode{v, nil, nil}
-	if list.head != nil {
-		node.prev = list.head
-	}
-
-	node.next = list.head
-	list.head = &node
-	if list.tail == nil {
-		list.tail = &node
-	}
+	insertAfter(&node, list.sentinel)
 	list.size++
 }
 
 // PopFront removes the first object from DLL.
 // Complexity: O(1).
 func (list *DLL) PopFront() {
-	if list.head != nil {
-		node := list.head
-		list.head = node.next
-		node.next = nil
-		node.prev = nil
-
-		if list.head == nil {
-			list.tail = nil
-		}
+	if list.Empty() {
+		return
 	}
+	removeAfter(list.sentinel)
+	list.size--
 }
 
 // PopBack removes the last object from DLL.
 // Complexity: O(1).
 func (list *DLL) PopBack() {
-	node := list.tail
-	if node != nil {
-		list.tail = node.prev
-		node.next = nil
-		node.prev = nil
-
-		if list.tail == nil {
-			list.head = nil
-		} else {
-			list.tail.next = nil
-		}
+	if list.Empty() {
+		return
 	}
+	removeBefore(list.sentinel)
+	list.size--
 }
 
 /*
@@ -128,21 +129,22 @@ func (list *DLL) End() stl.Iterator {
 // Reverse reverses the DLL.
 // Complexity: Linear in DLL size
 func (list *DLL) Reverse() {
-	var nextNode, prevNode *DLLNode = nil, nil
-	if list.head != nil {
-		nextNode = list.head.next
+	if list.Empty() {
+		return
 	}
-	for node := list.head; node != nil; {
+
+	node := list.sentinel
+	var nextNode, prevNode *DLLNode = node.next, node.prev
+	for {
 		node.next = prevNode
 		node.prev = nextNode
-		prevNode = node
 
+		prevNode = node
 		node = nextNode
-		if node == nil {
+		nextNode = nextNode.next
+
+		if node == list.sentinel {
 			break
 		}
-		nextNode = nextNode.next
 	}
-	list.tail = list.head
-	list.head = prevNode
 }

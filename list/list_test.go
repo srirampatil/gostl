@@ -1,13 +1,20 @@
 package list
 
 import (
-	"github.com/srirampatil/stl"
+	"math/rand"
 	"testing"
+	"time"
+
+	"github.com/srirampatil/stl"
 )
 
 type IntComparable int
 
 func (lhs IntComparable) Compare(r stl.Comparable) (int, error) {
+	if r == nil {
+		return 1, nil
+	}
+
 	rhs, ok := r.(IntComparable)
 	if !ok {
 		return 0, stl.TypeMismatchError{&lhs, &rhs}
@@ -20,55 +27,88 @@ func (lhs IntComparable) Compare(r stl.Comparable) (int, error) {
 	return 0, nil
 }
 
-func TestList(t *testing.T) {
-	list := NewDLL()
-	if v := list.Front(); v != nil {
-		t.Fatalf("Expected nil, received %v", v)
-	}
+var list *DLL
 
-	if v := list.Back(); v != nil {
-		t.Fatalf("Expected nil, received %v", v)
+func testNewDLL(t *testing.T) {
+	list = NewDLL()
+	if list == nil {
+		t.Fatalf("Could not allocate DLL")
 	}
+}
 
+func testEmpty(t *testing.T) {
 	if !list.Empty() {
 		t.Fatalf("Expected empty list, received non-empty")
 	}
+}
 
-	list.PushFront(IntComparable(20))
-	list.PushBack(IntComparable(10))
-	list.PushBack(IntComparable(30))
-	list.PushFront(IntComparable(40))
-
-	v := list.Front()
-	if res, err := v.Compare(IntComparable(40)); res != 0 || err != nil {
-		t.Fatalf("Expected 40, received %v", v)
-	}
-
-	v = list.Back()
-	if res, err := v.Compare(IntComparable(30)); res != 0 || err != nil {
-		t.Fatalf("Expected 30, received %v", v)
-	}
-
+func testNotEmpty(t *testing.T) {
 	if list.Empty() {
 		t.Fatalf("Expected non-empty list, received empty")
 	}
+}
 
-	if size := list.Size(); size != 4 {
-		t.Fatalf("Expected size 4, received %d", size)
+func testSize(t *testing.T, expected int) {
+	if list.Size() != expected {
+		t.Fatalf("Expected size %d, received size %d", expected, list.Size())
 	}
+}
+
+func testComparable(t *testing.T, v stl.Comparable, expected stl.Comparable) {
+	if (v == nil && expected != nil) || (v != nil && expected == nil) {
+		t.Fatalf("Expected %v, received %v", expected, v)
+	} else {
+		return
+	}
+
+	if res, err := v.Compare(expected); res != 0 || err != nil {
+		t.Fatalf("Expected %v, received %v", expected, v)
+	}
+}
+
+func testFront(t *testing.T, expected stl.Comparable) {
+	v := list.Front()
+	testComparable(t, v, expected)
+}
+
+func testBack(t *testing.T, expected stl.Comparable) {
+	v := list.Back()
+	testComparable(t, v, expected)
+}
+
+func TestList(t *testing.T) {
+	var length int = 10
+	rand.Seed(time.Now().UnixNano())
+	numbers := make([]int, 10, 10)
+	var direction bool = false
+	for i := 0; i < length; i++ {
+		if direction {
+			numbers[i] = rand.Intn(100)
+		} else {
+			numbers[length-i-1] = rand.Intn(100)
+		}
+		direction = !direction
+	}
+
+	testNewDLL(t)
+	testFront(t, nil)
+	testBack(t, nil)
+	testEmpty(t)
+
+	for _, n := range numbers {
+		list.PushBack(IntComparable(n))
+	}
+
+	testFront(t, IntComparable(numbers[0]))
+	testBack(t, IntComparable(numbers[length-1]))
+	testNotEmpty(t)
+	testSize(t, length)
 
 	list.PopFront()
-
-	v = list.Front()
-	if res, err := v.Compare(IntComparable(20)); res != 0 || err != nil {
-		t.Fatalf("Expected 20, received %v", v)
-	}
+	testFront(t, IntComparable(numbers[1]))
 
 	list.PopBack()
-	v = list.Back()
-	if res, err := v.Compare(IntComparable(10)); res != 0 || err != nil {
-		t.Fatalf("Expected 10, received %v", v)
-	}
+	testBack(t, IntComparable(numbers[length-2]))
 
 	/*
 		for it := list.Begin(); it != nil; it = it.Next() {
@@ -82,13 +122,23 @@ func TestList(t *testing.T) {
 		}
 	*/
 
-	if list.Empty() {
-		t.Fatalf("Expected list, received empty")
+	testNotEmpty(t)
+	for !list.Empty() {
+		list.PopBack()
 	}
 
+	testEmpty(t)
 	list.PopBack()
-	list.PopBack()
-
-	list.PushBack(IntComparable(30))
 	list.PopFront()
+
+	list.PushFront(IntComparable(numbers[0]))
+	testFront(t, IntComparable(numbers[0]))
+	testNotEmpty(t)
+
+	list.Reverse()
+	testNotEmpty(t)
+	list.PopBack()
+	testEmpty(t)
+	list.Reverse()
+	testEmpty(t)
 }
