@@ -1,7 +1,6 @@
 package list
 
 import (
-	"fmt"
 	"math/rand"
 	"testing"
 	"time"
@@ -46,7 +45,6 @@ func testComparable(t *testing.T, v interface{}, expected interface{}) {
 
 func testFront(t *testing.T, list *List, expected interface{}) {
 	v := list.Front()
-	fmt.Printf("%v, %v", v, expected)
 	testComparable(t, v, expected)
 }
 
@@ -59,14 +57,8 @@ func TestList(t *testing.T) {
 	var length int = 10
 	rand.Seed(time.Now().UnixNano())
 	numbers := make([]int, 10, 10)
-	var direction bool = false
 	for i := 0; i < length; i++ {
-		if direction {
-			numbers[i] = rand.Intn(100)
-		} else {
-			numbers[length-i-1] = rand.Intn(100)
-		}
-		direction = !direction
+		numbers[i] = rand.Intn(100)
 	}
 
 	var list *List
@@ -76,6 +68,7 @@ func TestList(t *testing.T) {
 	testEmpty(t, list)
 
 	for _, n := range numbers {
+		//fmt.Println(n)
 		list.PushBack(n)
 	}
 
@@ -84,23 +77,33 @@ func TestList(t *testing.T) {
 	testNotEmpty(t, list)
 	testSize(t, list, length)
 
+	var copyList *List
+	testNewList(t, &copyList)
+	for it := list.Begin(); !it.Equals(list.End()); it = it.Next() {
+		//fmt.Println(it)
+		copyList.PushBack(it.Value())
+	}
+
+	//fmt.Println()
+	copyList.Reverse()
+
+	for i, it := 0, copyList.Rbegin(); !it.Equals(copyList.Rend()); i, it = i+1, it.Next() {
+		if numbers[i] != it.Value() {
+			t.Fatalf("List reversal is incorrect")
+		}
+	}
+
+	for it1, it2 := list.Begin(), copyList.Rbegin(); !it1.Equals(list.End()); it1, it2 = it1.Next(), it2.Next() {
+		if it1.Value() != it2.Value() {
+			t.Fatalf("List reversal is incorrect")
+		}
+	}
+
 	list.PopFront()
 	testFront(t, list, numbers[1])
 
 	list.PopBack()
 	testBack(t, list, numbers[length-2])
-
-	/*
-		for it := list.Begin(); it != nil; it = it.Next() {
-			fmt.Println(it)
-		}
-
-		fmt.Println()
-		list.Reverse()
-		for it := list.Begin(); it != nil; it = it.Next() {
-			fmt.Println(it)
-		}
-	*/
 
 	testNotEmpty(t, list)
 	list.Clear()

@@ -1,20 +1,20 @@
 package list
 
-// ListNode represents a node in a doubly linked list. It implements the Iterator
+// listNode represents a node in a doubly linked list. It implements the Iterator
 // interface.
-type ListNode struct {
+type listNode struct {
 	value      interface{}
-	next, prev *ListNode
+	next, prev *listNode
 }
 
-func (node ListNode) Value() interface{} {
+func (node listNode) Value() interface{} {
 	return node.value
 }
 
 // List represents a doubly linked list and imlpements IList and Iterable
 // interfaces.
 type List struct {
-	sentinel *ListNode
+	sentinel *listNode
 	size     int
 }
 
@@ -22,7 +22,7 @@ type List struct {
 func NewList() (list *List) {
 	list = new(List)
 	list.size = 0
-	list.sentinel = new(ListNode)
+	list.sentinel = new(listNode)
 	list.sentinel.next = list.sentinel
 	list.sentinel.prev = list.sentinel
 	return
@@ -58,7 +58,7 @@ func (list List) Size() int {
 	return list.size
 }
 
-func insertAfter(node *ListNode, after *ListNode) {
+func insertAfter(node *listNode, after *listNode) {
 	node.prev = after
 	node.next = after.next
 
@@ -66,7 +66,7 @@ func insertAfter(node *ListNode, after *ListNode) {
 	after.next = node
 }
 
-func removeAfter(after *ListNode) {
+func removeAfter(after *listNode) {
 	nextNode := after.next
 	after.next = nextNode.next
 	nextNode.next.prev = after
@@ -74,7 +74,7 @@ func removeAfter(after *ListNode) {
 	nextNode.next, nextNode.prev = nil, nil
 }
 
-func removeBefore(before *ListNode) {
+func removeBefore(before *listNode) {
 	prevNode := before.prev
 	before.prev = prevNode.prev
 	prevNode.prev.next = before
@@ -85,7 +85,7 @@ func removeBefore(before *ListNode) {
 // PushBack adds an object at the end of List.
 // Complexity: O(1)
 func (list *List) PushBack(v interface{}) {
-	node := ListNode{v, nil, nil}
+	node := listNode{v, nil, nil}
 	insertAfter(&node, list.sentinel.prev)
 	list.size++
 }
@@ -93,7 +93,7 @@ func (list *List) PushBack(v interface{}) {
 // PushFront adds an object at the start of List.
 // Complexity: O(1).
 func (list *List) PushFront(v interface{}) {
-	node := ListNode{v, nil, nil}
+	node := listNode{v, nil, nil}
 	insertAfter(&node, list.sentinel)
 	list.size++
 }
@@ -118,19 +118,45 @@ func (list *List) PopBack() {
 	list.size--
 }
 
-/*
-// Begin returns an Iterator holding the first object of List.
+// Begin returns a ListIterator pointing to the first object of List.
+// It is a bidirectional ListIterator.
 // Complexity: O(1).
-func (list *List) Begin() stl.Iterator {
-	return list.head
+func (list *List) Begin() *ListIterator {
+	it := new(ListIterator)
+	it.dir = BOTH
+	it.ptr = list.sentinel.next
+	return it
 }
 
-// End returns an Iterator holding the last object of List.
+// End returns a ListIterator pointing to a theoretical object after the end of
+// the List. This function is used with Begin
 // Complexity: O(1).
-func (list *List) End() stl.Iterator {
-	return list.tail
+func (list *List) End() *ListIterator {
+	it := new(ListIterator)
+	it.dir = NONE
+	it.ptr = list.sentinel
+	return it
 }
-*/
+
+// Rbegin returns a ListIterator pointing to a theoretical object before the
+// first object of the List. It is a bidirectional reverse ListIterator
+// Complexity: O(1)
+func (list *List) Rbegin() *ListIterator {
+	it := new(ListIterator)
+	it.dir = BACKWARD
+	it.ptr = list.sentinel.prev
+	return it
+}
+
+// Rend returns a ListIterator pointing to before-the-first object of List.
+// This function is used with Rbegin
+// Complexity: O(1).
+func (list *List) Rend() *ListIterator {
+	it := new(ListIterator)
+	it.dir = NONE
+	it.ptr = list.sentinel
+	return it
+}
 
 // Reverse reverses the List.
 // Complexity: Linear in size of List
@@ -140,7 +166,7 @@ func (list *List) Reverse() {
 	}
 
 	node := list.sentinel
-	var nextNode, prevNode *ListNode = node.next, node.prev
+	var nextNode, prevNode *listNode = node.next, node.prev
 	for {
 		node.next = prevNode
 		node.prev = nextNode
