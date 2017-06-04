@@ -1,6 +1,9 @@
 package list
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/srirampatil/gostl/common"
+)
 
 type IteratorDirection uint8
 
@@ -16,7 +19,7 @@ type ListIterator struct {
 	dir IteratorDirection
 }
 
-func (it *ListIterator) Next() *ListIterator {
+func (it *ListIterator) Next() common.Iterator {
 	switch it.dir {
 	case NONE:
 		return it
@@ -28,7 +31,7 @@ func (it *ListIterator) Next() *ListIterator {
 	return it
 }
 
-func (it *ListIterator) Prev() *ListIterator {
+func (it *ListIterator) Prev() common.Iterator {
 	switch it.dir {
 	case NONE:
 		return it
@@ -44,7 +47,8 @@ func (it *ListIterator) Value() interface{} {
 	return it.ptr.Value()
 }
 
-func (lhs *ListIterator) Equals(rhs *ListIterator) bool {
+func (lhs *ListIterator) Equals(r common.Iterator) bool {
+	rhs := r.(*ListIterator)
 	if lhs.ptr != rhs.ptr {
 		return false
 	}

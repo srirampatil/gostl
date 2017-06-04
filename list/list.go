@@ -1,5 +1,7 @@
 package list
 
+import "github.com/srirampatil/gostl/common"
+
 // listNode represents a node in a doubly linked list. It implements the Iterator
 // interface.
 type listNode struct {
@@ -121,7 +123,7 @@ func (list *List) PopBack() {
 // Begin returns a ListIterator pointing to the first object of List.
 // It is a bidirectional ListIterator.
 // Complexity: O(1).
-func (list *List) Begin() *ListIterator {
+func (list *List) Begin() common.Iterator {
 	it := new(ListIterator)
 	it.dir = BOTH
 	it.ptr = list.sentinel.next
@@ -131,7 +133,7 @@ func (list *List) Begin() *ListIterator {
 // End returns a ListIterator pointing to a theoretical object after the end of
 // the List. This function is used with Begin
 // Complexity: O(1).
-func (list *List) End() *ListIterator {
+func (list *List) End() common.Iterator {
 	it := new(ListIterator)
 	it.dir = NONE
 	it.ptr = list.sentinel
@@ -141,7 +143,7 @@ func (list *List) End() *ListIterator {
 // Rbegin returns a ListIterator pointing to a theoretical object before the
 // first object of the List. It is a bidirectional reverse ListIterator
 // Complexity: O(1)
-func (list *List) Rbegin() *ListIterator {
+func (list *List) Rbegin() common.Iterator{
 	it := new(ListIterator)
 	it.dir = BACKWARD
 	it.ptr = list.sentinel.prev
@@ -151,7 +153,7 @@ func (list *List) Rbegin() *ListIterator {
 // Rend returns a ListIterator pointing to before-the-first object of List.
 // This function is used with Rbegin
 // Complexity: O(1).
-func (list *List) Rend() *ListIterator {
+func (list *List) Rend() common.Iterator {
 	it := new(ListIterator)
 	it.dir = NONE
 	it.ptr = list.sentinel

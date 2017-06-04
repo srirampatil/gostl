@@ -1,8 +1,8 @@
 package deque
 
 import (
-	"fmt"
 	"testing"
+	"github.com/srirampatil/gostl/common"
 )
 
 type OpType uint8
@@ -18,14 +18,6 @@ const (
 	RESIZE
 	SHRINKTOFIT
 )
-
-func checkExpected(t *testing.T, i int, r interface{}, e interface{}) {
-	if r != e {
-		t.Fatalf("Case %d => Expected %v, Received %v\n", i, e, r)
-	} else {
-		fmt.Printf("Case %d => Success!\n", i)
-	}
-}
 
 func TestDeque(t *testing.T) {
 	var cases = []struct {
@@ -55,11 +47,11 @@ func TestDeque(t *testing.T) {
 				t.Fatalf("Case %d => Could not create the Deque", i)
 			}
 		case EMPTY:
-			checkExpected(t, i, q.Empty(), c.empty)
+			common.CheckExpected(t, i, q.Empty(), c.empty)
 		case SIZE:
-			checkExpected(t, i, q.Size(), c.size)
+			common.CheckExpected(t, i, q.Size(), c.size)
 		case MAXSIZE:
-			checkExpected(t, i, q.MaxSize(), c.cap)
+			common.CheckExpected(t, i, q.MaxSize(), c.cap)
 		case SHRINKTOFIT:
 			q.ShrinkToFit()
 		}

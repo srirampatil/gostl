@@ -1,6 +1,6 @@
 package deque
 
-import "github.com/srirampatil/go-stl/list"
+import "github.com/srirampatil/gostl/list"
 
 type Deque struct {
 	list   *list.List

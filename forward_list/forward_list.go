@@ -1,18 +1,20 @@
 package forward_list
 
+import "github.com/srirampatil/gostl/common"
+
 type listNode struct {
 	value interface{}
 	next  *listNode
 }
 
-type Iterator struct {
+type ForwardListIterator struct {
 	node *listNode
 	list *ForwardList
 }
 
 type ForwardList struct {
 	sentinel *listNode
-	endItr   *Iterator
+	endItr   *ForwardListIterator
 	size     int
 }
 
@@ -22,25 +24,30 @@ func NewForwardList() *ForwardList {
 	list.size = 0
 	list.sentinel = new(listNode)
 	list.sentinel.next = list.sentinel
-	list.endItr = new(Iterator)
+	list.endItr = new(ForwardListIterator)
 	list.endItr.node = list.sentinel
 	list.endItr.list = list
 	return list
 }
 
-// Next moves the Iterator to the next node.
-func (itr *Iterator) Next() *Iterator {
+func (itr *ForwardListIterator) Prev() common.Iterator {
+	panic("ForwardList does not support backward iteration.")
+}
+
+// Next moves the ForwardListIterator to the next node.
+func (itr *ForwardListIterator) Next() common.Iterator {
 	itr.node = itr.node.next
 	return itr
 }
 
-// Value returns the value stored in the node pointed by the Iterator.
-func (itr *Iterator) Value() interface{} {
+// Value returns the value stored in the node pointed by the ForwardListIterator.
+func (itr *ForwardListIterator) Value() interface{} {
 	return itr.node.value
 }
 
-// Equals returns true if both Iterators are pointing to the same node.
-func (lhs *Iterator) Equals(rhs *Iterator) bool {
+// Equals returns true if both ForwardListIterators are pointing to the same node.
+func (lhs *ForwardListIterator) Equals(r common.Iterator) bool {
+	rhs := r.(*ForwardListIterator)
 	if lhs.list != rhs.list {
 		return false
 	}
@@ -96,16 +103,16 @@ func (list *ForwardList) Clear() {
 	list.size = 0
 }
 
-// Begin returns an Iterator pointing to the first node of the ForwardList.
-func (list *ForwardList) Begin() *Iterator {
-	itr := new(Iterator)
+// Begin returns an ForwardListIterator pointing to the first node of the ForwardList.
+func (list *ForwardList) Begin() common.Iterator {
+	itr := new(ForwardListIterator)
 	itr.node = list.sentinel.next
 	itr.list = list
 	return itr
 }
 
-// End returns an Iterator pointing to the node past-the-end of the ForwardList.
-func (list *ForwardList) End() *Iterator {
+// End returns an ForwardListIterator pointing to the node past-the-end of the ForwardList.
+func (list *ForwardList) End() common.Iterator {
 	return list.endItr
 }
 
