@@ -2,6 +2,7 @@ package deque
 
 import (
 	"testing"
+
 	"github.com/srirampatil/gostl/common"
 )
 
@@ -17,6 +18,8 @@ const (
 	MAXSIZE
 	RESIZE
 	SHRINKTOFIT
+	PUSHBACK
+	PUSHFRONT
 )
 
 func TestDeque(t *testing.T) {
@@ -24,18 +27,31 @@ func TestDeque(t *testing.T) {
 		op     OpType
 		empty  bool
 		size   int
-		cap    int
-		value  interface{}
-		values []interface{}
+		idx    int
+		value  int
+		values []int
 	}{
 		{op: NEW},
 		{op: EMPTY, empty: true},
 		{op: SIZE, size: 0},
-		{op: MAXSIZE, cap: 10},
+		{op: MAXSIZE, size: 10},
 		{op: SHRINKTOFIT},
 		{op: EMPTY, empty: true},
 		{op: SIZE, size: 0},
-		{op: MAXSIZE, cap: 0},
+		{op: MAXSIZE, size: 0},
+		{op: PUSHBACK, value: 1, values: []int{1}},
+		{op: PUSHBACK, value: 2, values: []int{1, 2}},
+		{op: PUSHBACK, value: 3, values: []int{1, 2, 3}},
+		{op: PUSHFRONT, value: 4, values: []int{4, 1, 2, 3}},
+		{op: SIZE, size: 4},
+		{op: MAXSIZE, size: 4},
+		{op: FRONT, value: 4},
+		{op: BACK, value: 3},
+		{op: AT, value: 1, idx: 1},
+		{op: PUSHFRONT, value: 5, values: []int{5, 4, 1, 2, 3}},
+		{op: SIZE, size: 5},
+		{op: MAXSIZE, size: 8},
+		{op: AT, value: 2, idx: 3},
 	}
 
 	var q *Deque = nil
@@ -51,9 +67,19 @@ func TestDeque(t *testing.T) {
 		case SIZE:
 			common.CheckExpected(t, i, q.Size(), c.size)
 		case MAXSIZE:
-			common.CheckExpected(t, i, q.MaxSize(), c.cap)
+			common.CheckExpected(t, i, q.MaxSize(), c.size)
 		case SHRINKTOFIT:
 			q.ShrinkToFit()
+		case PUSHBACK:
+			q.PushBack(c.value)
+		case PUSHFRONT:
+			q.PushFront(c.value)
+		case FRONT:
+			common.CheckExpected(t, i, q.Front(), c.value)
+		case BACK:
+			common.CheckExpected(t, i, q.Back(), c.value)
+		case AT:
+			common.CheckExpected(t, i, q.At(c.idx), c.value)
 		}
 	}
 }
