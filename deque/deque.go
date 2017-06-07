@@ -80,7 +80,7 @@ func (q *Deque) PushBack(v interface{}) {
 
 	q.values[q.back] = v
 	q.size++
-	q.back++
+	q.back = (q.back + 1) % cap(q.values)
 }
 
 func (q *Deque) PushFront(v interface{}) {
@@ -95,4 +95,24 @@ func (q *Deque) PushFront(v interface{}) {
 
 	q.values[q.front] = v
 	q.size++
+}
+
+func (q *Deque) PopBack() {
+	if !q.Empty() {
+		q.back--
+		q.size--
+	}
+}
+
+func (q *Deque) PopFront() {
+	if !q.Empty() {
+		q.front = (q.front + 1) % cap(q.values)
+		q.size--
+	}
+}
+
+func (q *Deque) Clear() {
+	q.front = 0
+	q.back = 0
+	q.size = 0
 }

@@ -1,3 +1,7 @@
+// Package list implements doubly linked list. It can perform constant time
+// insert and erase operations anywhere in the list. Lists can be iterated in
+// both directions.
+// Lists however cannot provide direct access to elements using index.
 package list
 
 import "github.com/srirampatil/gostl/common"
@@ -143,7 +147,7 @@ func (list *List) End() common.Iterator {
 // Rbegin returns a ListIterator pointing to a theoretical object before the
 // first object of the List. It is a bidirectional reverse ListIterator
 // Complexity: O(1)
-func (list *List) Rbegin() common.Iterator{
+func (list *List) Rbegin() common.Iterator {
 	it := new(ListIterator)
 	it.dir = BACKWARD
 	it.ptr = list.sentinel.prev

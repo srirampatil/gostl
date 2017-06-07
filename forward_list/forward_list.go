@@ -1,3 +1,7 @@
+// Package forward_list implements singly linked list. It allows constant time
+// insert and erase operations anywhere within the list. As the names suggests,
+// ForwardLists can be ieterated only in forward direction.
+// ForwardLists do not provide direct access to the elements.
 package forward_list
 
 import "github.com/srirampatil/gostl/common"
