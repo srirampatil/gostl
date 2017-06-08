@@ -88,8 +88,10 @@ func TestDeque(t *testing.T) {
 			q.ShrinkToFit()
 		case PUSHBACK:
 			q.PushBack(c.value)
+			common.CheckIfEqual(t, i, common.Iterate(q.Begin(), q.End()), c.values)
 		case PUSHFRONT:
 			q.PushFront(c.value)
+			common.CheckIfEqual(t, i, common.Iterate(q.Begin(), q.End()), c.values)
 		case FRONT:
 			common.CheckExpected(t, i, q.Front(), c.value)
 		case BACK:
@@ -98,8 +100,10 @@ func TestDeque(t *testing.T) {
 			common.CheckExpected(t, i, q.At(c.idx), c.value)
 		case POPBACK:
 			q.PopBack()
+			common.CheckIfEqual(t, i, common.Iterate(q.Begin(), q.End()), c.values)
 		case POPFRONT:
 			q.PopFront()
+			common.CheckIfEqual(t, i, common.Iterate(q.Begin(), q.End()), c.values)
 		case CLEAR:
 			q.Clear()
 		}

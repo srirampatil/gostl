@@ -1,9 +1,64 @@
 package deque
 
+import "github.com/srirampatil/gostl/common"
+
+type IteratorDirection uint8
+
+const (
+	FORWARD IteratorDirection = iota + 1
+	BACKWARD
+	BOTH
+	NONE
+)
+
+type DequeIterator struct {
+	direction IteratorDirection
+	index     int
+	deque     *Deque
+}
+
 type Deque struct {
 	front, back int
 	size        int
 	values      []interface{}
+	endItr      *DequeIterator
+}
+
+func (itr *DequeIterator) moveToPrev() common.Iterator {
+	itr.index = itr.index - 1
+	return itr
+}
+
+func (itr *DequeIterator) moveToNext() common.Iterator {
+	itr.index = itr.index + 1
+	if itr.index >= itr.deque.Size() {
+		itr.index = -1
+	}
+	return itr
+}
+
+func (itr *DequeIterator) Next() common.Iterator {
+	switch itr.direction {
+	case BACKWARD:
+		return itr.moveToPrev()
+	case FORWARD:
+		return itr.moveToNext()
+	}
+
+	return itr
+}
+
+func (itr *DequeIterator) Value() interface{} {
+	return itr.deque.At(itr.index)
+}
+
+func (lhs *DequeIterator) Equals(r common.Iterator) bool {
+	rhs, ok := r.(*DequeIterator)
+	if !ok {
+		return false
+	}
+
+	return (lhs.deque == rhs.deque) && (lhs.index == rhs.index)
 }
 
 func NewDeque(cap int) *Deque {
@@ -12,6 +67,9 @@ func NewDeque(cap int) *Deque {
 	q.front = 0
 	q.back = 0
 	q.size = 0
+	q.endItr = new(DequeIterator)
+	q.endItr.index = -1
+	q.endItr.deque = q
 	return q
 }
 
@@ -85,7 +143,11 @@ func (q *Deque) PushBack(v interface{}) {
 
 func (q *Deque) PushFront(v interface{}) {
 	if q.size == cap(q.values) {
-		q.Resize(cap(q.values) * 2)
+		newCap := 2
+		if cap(q.values) > 0 {
+			newCap = cap(q.values) * 2
+		}
+		q.Resize(newCap)
 	}
 
 	q.front--
@@ -115,4 +177,16 @@ func (q *Deque) Clear() {
 	q.front = 0
 	q.back = 0
 	q.size = 0
+}
+
+func (q *Deque) Begin() common.Iterator {
+	itr := new(DequeIterator)
+	itr.index = 0
+	itr.direction = FORWARD
+	itr.deque = q
+	return itr
+}
+
+func (q *Deque) End() common.Iterator {
+	return q.endItr
 }

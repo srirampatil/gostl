@@ -34,10 +34,6 @@ func NewForwardList() *ForwardList {
 	return list
 }
 
-func (itr *ForwardListIterator) Prev() common.Iterator {
-	panic("ForwardList does not support backward iteration.")
-}
-
 // Next moves the ForwardListIterator to the next node.
 func (itr *ForwardListIterator) Next() common.Iterator {
 	itr.node = itr.node.next

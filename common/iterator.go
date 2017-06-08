@@ -5,9 +5,6 @@ type Iterator interface {
 	// Next returns an iterator pointing to the next object.
 	Next() Iterator
 
-	// Prev returns an iterator pointing to the previous object.
-	Prev() Iterator
-
 	// Value returns the value of the object pointed by the Iterator.
 	Value() interface{}
 

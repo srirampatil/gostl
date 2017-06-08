@@ -1,6 +1,10 @@
 package forward_list
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/srirampatil/gostl/common"
+)
 
 var globalT *testing.T = nil
 var list *ForwardList = nil
@@ -10,24 +14,6 @@ func testNewForwardList(list **ForwardList) {
 	if *list == nil {
 		globalT.Fatalf("Could not create ForwardList")
 	}
-}
-
-func iterate(list *ForwardList) []int {
-	var s []int
-	for itr := list.Begin(); !itr.Equals(list.End()); itr.Next() {
-		v := itr.Value().(int)
-		s = append(s, v)
-	}
-	return s
-}
-
-func compareSlices(a []int, b []int) bool {
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
 }
 
 type OpType uint8
@@ -71,7 +57,7 @@ func TestForwardList(t *testing.T) {
 		{op: EMPTY, empty: true},
 	}
 
-	for _, c := range cases {
+	for i, c := range cases {
 		switch c.op {
 		case EMPTY:
 			if list.Empty() != c.empty {
@@ -83,14 +69,10 @@ func TestForwardList(t *testing.T) {
 			}
 		case PUSH:
 			list.PushFront(c.value)
-			if !compareSlices(iterate(list), c.list) {
-				t.Fatalf("Expected: %v", c.list)
-			}
+			common.CheckIfEqual(t, i, common.Iterate(list.Begin(), list.End()), c.list)
 		case POP:
 			list.PopFront()
-			if !compareSlices(iterate(list), c.list) {
-				t.Fatalf("Expected: %v", c.list)
-			}
+			common.CheckIfEqual(t, i, common.Iterate(list.Begin(), list.End()), c.list)
 		case FRONT:
 			v := list.Front()
 			if v != c.value {

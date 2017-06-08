@@ -2,6 +2,7 @@ package list
 
 import (
 	"fmt"
+
 	"github.com/srirampatil/gostl/common"
 )
 
@@ -27,18 +28,6 @@ func (it *ListIterator) Next() common.Iterator {
 		it.ptr = it.ptr.prev
 	default:
 		it.ptr = it.ptr.next
-	}
-	return it
-}
-
-func (it *ListIterator) Prev() common.Iterator {
-	switch it.dir {
-	case NONE:
-		return it
-	case BACKWARD:
-		it.ptr = it.ptr.next
-	default:
-		it.ptr = it.ptr.prev
 	}
 	return it
 }
