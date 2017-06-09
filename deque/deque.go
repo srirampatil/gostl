@@ -190,3 +190,15 @@ func (q *Deque) Begin() common.Iterator {
 func (q *Deque) End() common.Iterator {
 	return q.endItr
 }
+
+func (q *Deque) Rbegin() common.Iterator {
+	itr := new(DequeIterator)
+	itr.index = q.Size() - 1
+	itr.direction = BACKWARD
+	itr.deque = q
+	return itr
+}
+
+func (q *Deque) Rend() common.Iterator {
+	return q.endItr
+}

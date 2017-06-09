@@ -13,7 +13,7 @@ func CheckExpected(t *testing.T, i int, r interface{}, e interface{}) {
 	}
 }
 
-func CheckIfEqual(t *testing.T, testNo int, r []int, e []int) {
+func CheckIfEqual(t *testing.T, testNo int, r []interface{}, e []interface{}) {
 	for i := range r {
 		if r[i] != e[i] {
 			t.Fatalf("Case %d => Idx: %d, Expected %v, Received %v\n", i, testNo, e[i], r[i])
@@ -23,11 +23,10 @@ func CheckIfEqual(t *testing.T, testNo int, r []int, e []int) {
 	fmt.Printf("Case %d => Success!\n", testNo)
 }
 
-func Iterate(begin Iterator, end Iterator) []int {
-	var s []int
+func Iterate(begin Iterator, end Iterator) []interface{} {
+	var s []interface{}
 	for itr := begin; !itr.Equals(end); itr.Next() {
-		v := itr.Value().(int)
-		s = append(s, v)
+		s = append(s, itr.Value())
 	}
 	return s
 }

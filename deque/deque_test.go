@@ -23,6 +23,8 @@ const (
 	POPBACK
 	POPFRONT
 	CLEAR
+	ITERATE
+	REVERSE_ITERATE
 )
 
 func TestDeque(t *testing.T) {
@@ -32,7 +34,7 @@ func TestDeque(t *testing.T) {
 		size   int
 		idx    int
 		value  interface{}
-		values []int
+		values []interface{}
 	}{
 		{op: NEW},
 		{op: EMPTY, empty: true},
@@ -44,27 +46,29 @@ func TestDeque(t *testing.T) {
 		{op: MAXSIZE, size: 0},
 		{op: FRONT, value: nil},
 		{op: BACK, value: nil},
-		{op: PUSHBACK, value: 1, values: []int{1}},
-		{op: PUSHBACK, value: 2, values: []int{1, 2}},
-		{op: PUSHBACK, value: 3, values: []int{1, 2, 3}},
-		{op: PUSHFRONT, value: 4, values: []int{4, 1, 2, 3}},
+		{op: PUSHBACK, value: 1, values: []interface{}{1}},
+		{op: PUSHBACK, value: 2, values: []interface{}{1, 2}},
+		{op: PUSHBACK, value: 3, values: []interface{}{1, 2, 3}},
+		{op: PUSHFRONT, value: 4, values: []interface{}{4, 1, 2, 3}},
 		{op: SIZE, size: 4},
 		{op: MAXSIZE, size: 4},
 		{op: FRONT, value: 4},
 		{op: BACK, value: 3},
 		{op: AT, value: 1, idx: 1},
-		{op: PUSHFRONT, value: 5, values: []int{5, 4, 1, 2, 3}},
+		{op: PUSHFRONT, value: 5, values: []interface{}{5, 4, 1, 2, 3}},
 		{op: SIZE, size: 5},
 		{op: MAXSIZE, size: 8},
 		{op: AT, value: 2, idx: 3},
-		{op: POPBACK, values: []int{5, 4, 1, 2}},
+		{op: POPBACK, values: []interface{}{5, 4, 1, 2}},
 		{op: SIZE, size: 4},
 		{op: FRONT, value: 5},
 		{op: BACK, value: 2},
-		{op: POPFRONT, value: 5, values: []int{4, 1, 2}},
+		{op: POPFRONT, value: 5, values: []interface{}{4, 1, 2}},
 		{op: SIZE, size: 3},
 		{op: FRONT, value: 4},
 		{op: BACK, value: 2},
+		{op: ITERATE, values: []interface{}{4, 1, 2}},
+		{op: REVERSE_ITERATE, values: []interface{}{2, 1, 4}},
 		{op: CLEAR},
 		{op: EMPTY, empty: true},
 		{op: AT, value: nil, idx: 100},
@@ -106,6 +110,10 @@ func TestDeque(t *testing.T) {
 			common.CheckIfEqual(t, i, common.Iterate(q.Begin(), q.End()), c.values)
 		case CLEAR:
 			q.Clear()
+		case ITERATE:
+			common.CheckIfEqual(t, i, common.Iterate(q.Begin(), q.End()), c.values)
+		case REVERSE_ITERATE:
+			common.CheckIfEqual(t, i, common.Iterate(q.Rbegin(), q.Rend()), c.values)
 		}
 	}
 }
