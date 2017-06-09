@@ -1,33 +1,15 @@
-package deque
+package container
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/srirampatil/gostl/common"
 )
 
-type OpType uint8
-
-const (
-	NEW OpType = iota + 1
-	EMPTY
-	SIZE
-	AT
-	FRONT
-	BACK
-	MAXSIZE
-	RESIZE
-	SHRINKTOFIT
-	PUSHBACK
-	PUSHFRONT
-	POPBACK
-	POPFRONT
-	CLEAR
-	ITERATE
-	REVERSE_ITERATE
-)
-
 func TestDeque(t *testing.T) {
+	fmt.Println("-----Running Deque Tests-----")
+
 	var cases = []struct {
 		op     OpType
 		empty  bool

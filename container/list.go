@@ -1,8 +1,4 @@
-// Package list implements doubly linked list. It can perform constant time
-// insert and erase operations anywhere in the list. Lists can be iterated in
-// both directions.
-// Lists however cannot provide direct access to elements using index.
-package list
+package container
 
 import "github.com/srirampatil/gostl/common"
 
@@ -17,8 +13,10 @@ func (node listNode) Value() interface{} {
 	return node.value
 }
 
-// List represents a doubly linked list and imlpements IList and Iterable
-// interfaces.
+// List type implements doubly linked list. It can perform constant time
+// insert and erase operations anywhere in the list. Lists can be iterated in
+// both directions.
+// Lists however cannot provide direct access to elements using index.
 type List struct {
 	sentinel *listNode
 	size     int
@@ -129,7 +127,7 @@ func (list *List) PopBack() {
 // Complexity: O(1).
 func (list *List) Begin() common.Iterator {
 	it := new(ListIterator)
-	it.dir = BOTH
+	it.dir = common.BOTH
 	it.ptr = list.sentinel.next
 	return it
 }
@@ -139,7 +137,7 @@ func (list *List) Begin() common.Iterator {
 // Complexity: O(1).
 func (list *List) End() common.Iterator {
 	it := new(ListIterator)
-	it.dir = NONE
+	it.dir = common.NONE
 	it.ptr = list.sentinel
 	return it
 }
@@ -149,7 +147,7 @@ func (list *List) End() common.Iterator {
 // Complexity: O(1)
 func (list *List) Rbegin() common.Iterator {
 	it := new(ListIterator)
-	it.dir = BACKWARD
+	it.dir = common.BACKWARD
 	it.ptr = list.sentinel.prev
 	return it
 }
@@ -159,7 +157,7 @@ func (list *List) Rbegin() common.Iterator {
 // Complexity: O(1).
 func (list *List) Rend() common.Iterator {
 	it := new(ListIterator)
-	it.dir = NONE
+	it.dir = common.NONE
 	it.ptr = list.sentinel
 	return it
 }

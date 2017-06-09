@@ -1,23 +1,23 @@
-// Package forward_list implements singly linked list. It allows constant time
-// insert and erase operations anywhere within the list. As the names suggests,
-// ForwardLists can be ieterated only in forward direction.
-// ForwardLists do not provide direct access to the elements.
-package forward_list
+package container
 
 import "github.com/srirampatil/gostl/common"
 
-type listNode struct {
+type forwardListNode struct {
 	value interface{}
-	next  *listNode
+	next  *forwardListNode
 }
 
 type ForwardListIterator struct {
-	node *listNode
+	node *forwardListNode
 	list *ForwardList
 }
 
+// ForwardList type implements singly linked list. It allows constant time
+// insert and erase operations anywhere within the list. As the names suggests,
+// ForwardLists can be ieterated only in forward direction.
+// ForwardLists do not provide direct access to the elements.
 type ForwardList struct {
-	sentinel *listNode
+	sentinel *forwardListNode
 	endItr   *ForwardListIterator
 	size     int
 }
@@ -26,7 +26,7 @@ type ForwardList struct {
 func NewForwardList() *ForwardList {
 	list := new(ForwardList)
 	list.size = 0
-	list.sentinel = new(listNode)
+	list.sentinel = new(forwardListNode)
 	list.sentinel.next = list.sentinel
 	list.endItr = new(ForwardListIterator)
 	list.endItr.node = list.sentinel
@@ -80,7 +80,7 @@ func (list *ForwardList) Front() interface{} {
 // PushFront creates a new node containing value v and adds it to the start of
 // the ForwardList.
 func (list *ForwardList) PushFront(v interface{}) {
-	node := new(listNode)
+	node := new(forwardListNode)
 	node.value = v
 	node.next = list.sentinel.next
 	list.sentinel.next = node
@@ -118,7 +118,7 @@ func (list *ForwardList) End() common.Iterator {
 
 // Reverse reverses the ForwardList in place.
 func (list *ForwardList) Reverse() {
-	var prev, curr, next *listNode = list.sentinel, list.sentinel.next, list.sentinel.next.next
+	var prev, curr, next *forwardListNode = list.sentinel, list.sentinel.next, list.sentinel.next.next
 
 	for prev != next {
 		curr.next = prev

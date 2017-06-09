@@ -1,6 +1,7 @@
-package forward_list
+package container
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/srirampatil/gostl/common"
@@ -16,41 +17,30 @@ func testNewForwardList(list **ForwardList) {
 	}
 }
 
-type OpType uint8
-
-const (
-	PUSH OpType = iota + 1
-	POP
-	EMPTY
-	SIZE
-	REVERSE
-	FRONT
-	CLEAR
-)
-
 func TestForwardList(t *testing.T) {
+	fmt.Println("-----Running ForwardList Tests-----")
 	globalT = t
 	testNewForwardList(&list)
 
 	var cases = []struct {
 		op    OpType
 		value interface{}
-		list  []int
+		list  []interface{}
 		empty bool
 		size  int
 	}{
 		{op: EMPTY, empty: true},
-		{op: PUSH, value: 1, list: []int{1}},
-		{op: PUSH, value: 2, list: []int{2, 1}},
-		{op: PUSH, value: 3, list: []int{3, 2, 1}},
-		{op: PUSH, value: 4, list: []int{4, 3, 2, 1}},
-		{op: PUSH, value: 5, list: []int{5, 4, 3, 2, 1}},
-		{op: POP, list: []int{4, 3, 2, 1}},
+		{op: PUSH, value: 1, list: []interface{}{1}},
+		{op: PUSH, value: 2, list: []interface{}{2, 1}},
+		{op: PUSH, value: 3, list: []interface{}{3, 2, 1}},
+		{op: PUSH, value: 4, list: []interface{}{4, 3, 2, 1}},
+		{op: PUSH, value: 5, list: []interface{}{5, 4, 3, 2, 1}},
+		{op: POP, list: []interface{}{4, 3, 2, 1}},
 		{op: EMPTY, empty: false},
 		{op: SIZE, size: 4},
 		{op: FRONT, value: 4},
-		{op: POP, list: []int{3, 2, 1}},
-		{op: REVERSE, list: []int{1, 2, 3}},
+		{op: POP, list: []interface{}{3, 2, 1}},
+		{op: REVERSE, list: []interface{}{1, 2, 3}},
 		{op: FRONT, value: 1},
 		{op: CLEAR},
 		{op: FRONT, value: nil},

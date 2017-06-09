@@ -1,4 +1,4 @@
-package deque
+package container
 
 import "github.com/srirampatil/gostl/common"
 

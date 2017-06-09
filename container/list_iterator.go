@@ -1,4 +1,4 @@
-package list
+package container
 
 import (
 	"fmt"
@@ -6,25 +6,16 @@ import (
 	"github.com/srirampatil/gostl/common"
 )
 
-type IteratorDirection uint8
-
-const (
-	FORWARD IteratorDirection = iota + 1
-	BACKWARD
-	BOTH
-	NONE
-)
-
 type ListIterator struct {
 	ptr *listNode
-	dir IteratorDirection
+	dir common.IteratorDirection
 }
 
 func (it *ListIterator) Next() common.Iterator {
 	switch it.dir {
-	case NONE:
+	case common.NONE:
 		return it
-	case BACKWARD:
+	case common.BACKWARD:
 		it.ptr = it.ptr.prev
 	default:
 		it.ptr = it.ptr.next
@@ -42,7 +33,7 @@ func (lhs *ListIterator) Equals(r common.Iterator) bool {
 		return false
 	}
 
-	if lhs.dir != rhs.dir && lhs.dir != NONE && rhs.dir != NONE {
+	if lhs.dir != rhs.dir && lhs.dir != common.NONE && rhs.dir != common.NONE {
 		return false
 	}
 	return true

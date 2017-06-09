@@ -1,5 +1,14 @@
 package common
 
+type IteratorDirection uint8
+
+const (
+	FORWARD IteratorDirection = iota + 1
+	BACKWARD
+	BOTH
+	NONE
+)
+
 // Iterator is a type which Iterable holds.
 type Iterator interface {
 	// Next returns an iterator pointing to the next object.

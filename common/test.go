@@ -16,7 +16,7 @@ func CheckExpected(t *testing.T, i int, r interface{}, e interface{}) {
 func CheckIfEqual(t *testing.T, testNo int, r []interface{}, e []interface{}) {
 	for i := range r {
 		if r[i] != e[i] {
-			t.Fatalf("Case %d => Idx: %d, Expected %v, Received %v\n", i, testNo, e[i], r[i])
+			t.Fatalf("Case %d => Idx: %d, Expected %v, Received %v\n", testNo, i, e[i], r[i])
 		}
 	}
 
