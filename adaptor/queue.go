@@ -1,4 +1,4 @@
-package adaptors
+package adaptor
 
 import "github.com/srirampatil/gostl/container"
 

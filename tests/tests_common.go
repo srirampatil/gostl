@@ -1,8 +1,35 @@
-package common
+package tests
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/srirampatil/gostl/common"
+)
+
+type OpType uint8
+
+const (
+	NEW OpType = iota + 1
+	EMPTY
+	SIZE
+	AT
+	FRONT
+	BACK
+	MAXSIZE
+	RESIZE
+	SHRINKTOFIT
+	PUSHBACK
+	PUSHFRONT
+	POPBACK
+	POPFRONT
+	CLEAR
+	ITERATE
+	REVERSE_ITERATE
+	PUSH
+	POP
+	REVERSE
+	TOP
 )
 
 func CheckExpected(t *testing.T, i int, r interface{}, e interface{}) {
@@ -23,7 +50,7 @@ func CheckIfEqual(t *testing.T, testNo int, r []interface{}, e []interface{}) {
 	fmt.Printf("Case %d => Success!\n", testNo)
 }
 
-func Iterate(begin Iterator, end Iterator) []interface{} {
+func Iterate(begin common.Iterator, end common.Iterator) []interface{} {
 	var s []interface{}
 	for itr := begin; !itr.Equals(end); itr.Next() {
 		s = append(s, itr.Value())

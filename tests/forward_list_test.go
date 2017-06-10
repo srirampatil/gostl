@@ -1,17 +1,17 @@
-package container
+package tests
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/srirampatil/gostl/common"
+	"github.com/srirampatil/gostl/container"
 )
 
 var globalT *testing.T = nil
-var list *ForwardList = nil
+var list *container.ForwardList = nil
 
-func testNewForwardList(list **ForwardList) {
-	*list = NewForwardList()
+func testNewForwardList(list **container.ForwardList) {
+	*list = container.NewForwardList()
 	if *list == nil {
 		globalT.Fatalf("Could not create ForwardList")
 	}
@@ -59,10 +59,10 @@ func TestForwardList(t *testing.T) {
 			}
 		case PUSH:
 			list.PushFront(c.value)
-			common.CheckIfEqual(t, i, common.Iterate(list.Begin(), list.End()), c.list)
+			CheckIfEqual(t, i, Iterate(list.Begin(), list.End()), c.list)
 		case POP:
 			list.PopFront()
-			common.CheckIfEqual(t, i, common.Iterate(list.Begin(), list.End()), c.list)
+			CheckIfEqual(t, i, Iterate(list.Begin(), list.End()), c.list)
 		case FRONT:
 			v := list.Front()
 			if v != c.value {
