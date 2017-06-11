@@ -13,7 +13,7 @@ func TestStack(t *testing.T) {
 		op    OpType
 		value interface{}
 	}{
-		{op: NEW, value: container.ContainerTypeForwardList},
+		{op: NEW, value: container.NewForwardList()},
 		{op: EMPTY, value: true},
 		{op: SIZE, value: 0},
 		{op: PUSH, value: 1},
@@ -30,7 +30,7 @@ func TestStack(t *testing.T) {
 		{op: SIZE, value: 2},
 		{op: EMPTY, value: false},
 		{op: TOP, value: 3},
-		{op: NEW, value: container.ContainerTypeList},
+		{op: NEW, value: container.NewList()},
 		{op: EMPTY, value: true},
 		{op: SIZE, value: 0},
 		{op: PUSH, value: 1},
@@ -47,7 +47,7 @@ func TestStack(t *testing.T) {
 		{op: SIZE, value: 2},
 		{op: EMPTY, value: false},
 		{op: TOP, value: 3},
-		{op: NEW, value: container.ContainerTypeDeque},
+		{op: NEW, value: container.NewDeque(2)},
 		{op: EMPTY, value: true},
 		{op: SIZE, value: 0},
 		{op: PUSH, value: 1},
@@ -70,9 +70,8 @@ func TestStack(t *testing.T) {
 	for i, c := range cases {
 		switch c.op {
 		case NEW:
-			cType := c.value.(container.ContainerType)
-			fmt.Printf("-----Running Stack tests with container %v-----\n", cType)
-			s = adaptor.NewStack(cType)
+			fmt.Printf("-----Running Stack tests with container %T-----\n", c.value)
+			s = adaptor.NewStack(c.value.(adaptor.StackContainer))
 		case EMPTY:
 			CheckExpected(t, i, s.Empty(), c.value)
 		case SIZE:

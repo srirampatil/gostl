@@ -7,6 +7,7 @@ type forwardListNode struct {
 	next  *forwardListNode
 }
 
+// Iterator for ForwardList.
 type ForwardListIterator struct {
 	node *forwardListNode
 	list *ForwardList
@@ -126,16 +127,4 @@ func (list *ForwardList) Reverse() {
 		curr = next
 		next = curr.next
 	}
-}
-
-func (list *ForwardList) Back() interface{} {
-	panic("ForwardList does not support Back")
-}
-
-func (list *ForwardList) PushBack(v interface{}) {
-	panic("ForwardList does not support PushBack")
-}
-
-func (list *ForwardList) PopBack() {
-	panic("ForwardList does not support PopBack")
 }

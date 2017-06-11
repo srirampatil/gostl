@@ -11,12 +11,14 @@ const (
 	NONE
 )
 
+// Iterator for Deque.
 type DequeIterator struct {
 	direction IteratorDirection
 	index     int
 	deque     *Deque
 }
 
+// Deque is a double ended queue. Deque supports push and pop from both ends.
 type Deque struct {
 	front, back int
 	size        int
@@ -37,6 +39,7 @@ func (itr *DequeIterator) moveToNext() common.Iterator {
 	return itr
 }
 
+// Next returns an Iterator pointing to the next element in Deque.
 func (itr *DequeIterator) Next() common.Iterator {
 	switch itr.direction {
 	case BACKWARD:
@@ -48,10 +51,12 @@ func (itr *DequeIterator) Next() common.Iterator {
 	return itr
 }
 
+// Value returns the element pointed by Iterator.
 func (itr *DequeIterator) Value() interface{} {
 	return itr.deque.At(itr.index)
 }
 
+// Equals returns true if both the Iterators are pointing to the same element.
 func (lhs *DequeIterator) Equals(r common.Iterator) bool {
 	rhs, ok := r.(*DequeIterator)
 	if !ok {
@@ -61,6 +66,7 @@ func (lhs *DequeIterator) Equals(r common.Iterator) bool {
 	return (lhs.deque == rhs.deque) && (lhs.index == rhs.index)
 }
 
+// NewDeque returns a new Deque object.
 func NewDeque(cap int) *Deque {
 	q := new(Deque)
 	q.values = make([]interface{}, cap, cap)
@@ -73,18 +79,24 @@ func NewDeque(cap int) *Deque {
 	return q
 }
 
+// Size returns the number of elements stored in Deque.
 func (q *Deque) Size() int {
 	return q.size
 }
 
+// MaxSize returns the current capacity of Deque.
 func (q *Deque) MaxSize() int {
 	return cap(q.values)
 }
 
+// Empty returns true if Deque is empty.
 func (q *Deque) Empty() bool {
 	return q.size == 0
 }
 
+// Resize changes the capacity of Deque. MaxSize is affected after Resize. Size
+// remains the same. If new Cap is less than the current MaxSize of then Deque
+// is truncated to newCap.
 func (q *Deque) Resize(newCap int) {
 	if newCap != cap(q.values) {
 		newValues := make([]interface{}, newCap, newCap)
@@ -98,10 +110,12 @@ func (q *Deque) Resize(newCap int) {
 	}
 }
 
+// ShrinkToFit resizes the Deque to Deque.Size().
 func (q *Deque) ShrinkToFit() {
 	q.Resize(q.Size())
 }
 
+// At returns the element at index idx.
 func (q *Deque) At(idx int) interface{} {
 	if idx >= len(q.values) {
 		return nil
@@ -113,6 +127,7 @@ func (q *Deque) At(idx int) interface{} {
 	return q.values[actualIdx]
 }
 
+// Front returns the first elemnt in the Deque.
 func (q *Deque) Front() interface{} {
 	if !q.Empty() {
 		return q.values[q.front]
@@ -120,6 +135,7 @@ func (q *Deque) Front() interface{} {
 	return nil
 }
 
+// Back returns the Last element in the Deque.
 func (q *Deque) Back() interface{} {
 	if !q.Empty() {
 		return q.values[q.back-1]
@@ -127,6 +143,7 @@ func (q *Deque) Back() interface{} {
 	return nil
 }
 
+// PushBack adds v to the end of the Deque.
 func (q *Deque) PushBack(v interface{}) {
 	if q.size == cap(q.values) {
 		newCap := 2
@@ -141,6 +158,7 @@ func (q *Deque) PushBack(v interface{}) {
 	q.back = (q.back + 1) % cap(q.values)
 }
 
+// PushFront adds v to the start of the Deque.
 func (q *Deque) PushFront(v interface{}) {
 	if q.size == cap(q.values) {
 		newCap := 2
@@ -159,6 +177,7 @@ func (q *Deque) PushFront(v interface{}) {
 	q.size++
 }
 
+// PopBack removes an element from the end of Deque.
 func (q *Deque) PopBack() {
 	if !q.Empty() {
 		q.back--
@@ -166,6 +185,7 @@ func (q *Deque) PopBack() {
 	}
 }
 
+// PopFront removes an element from the start of the Deque.
 func (q *Deque) PopFront() {
 	if !q.Empty() {
 		q.front = (q.front + 1) % cap(q.values)
@@ -173,12 +193,14 @@ func (q *Deque) PopFront() {
 	}
 }
 
+// Clear removes everything from the Deque.
 func (q *Deque) Clear() {
 	q.front = 0
 	q.back = 0
 	q.size = 0
 }
 
+// Begin returns an Iterator pointing to the first element of the Deque.
 func (q *Deque) Begin() common.Iterator {
 	itr := new(DequeIterator)
 	itr.index = 0
@@ -187,10 +209,13 @@ func (q *Deque) Begin() common.Iterator {
 	return itr
 }
 
+// End returns the Iterator pointing to a theoretical element past-the-end of Deque.
 func (q *Deque) End() common.Iterator {
 	return q.endItr
 }
 
+// Rbegin returns an Iterator poiting to the last element of the Deque, which
+// moves in reverse direction.
 func (q *Deque) Rbegin() common.Iterator {
 	itr := new(DequeIterator)
 	itr.index = q.Size() - 1
@@ -199,6 +224,7 @@ func (q *Deque) Rbegin() common.Iterator {
 	return itr
 }
 
+// Rend returns the Iterator pointing to a theoretical elemtn before-the-start of Deque.
 func (q *Deque) Rend() common.Iterator {
 	return q.endItr
 }

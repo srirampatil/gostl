@@ -20,6 +20,7 @@ func (node listNode) Value() interface{} {
 type List struct {
 	sentinel *listNode
 	size     int
+	endItr   common.Iterator
 }
 
 // NewList creates a new doubly linked list (List).
@@ -29,6 +30,9 @@ func NewList() (list *List) {
 	list.sentinel = new(listNode)
 	list.sentinel.next = list.sentinel
 	list.sentinel.prev = list.sentinel
+	endItr := new(ListIterator)
+	endItr.dir = common.NONE
+	endItr.ptr = list.sentinel
 	return
 }
 
@@ -136,20 +140,14 @@ func (list *List) Begin() common.Iterator {
 // the List. This function is used with Begin
 // Complexity: O(1).
 func (list *List) End() common.Iterator {
-	it := new(ListIterator)
-	it.dir = common.NONE
-	it.ptr = list.sentinel
-	return it
+	return list.endItr
 }
 
 // Rbegin returns a ListIterator pointing to a theoretical object before the
 // first object of the List. It is a bidirectional reverse ListIterator
 // Complexity: O(1)
 func (list *List) Rbegin() common.Iterator {
-	it := new(ListIterator)
-	it.dir = common.BACKWARD
-	it.ptr = list.sentinel.prev
-	return it
+	return list.endItr
 }
 
 // Rend returns a ListIterator pointing to before-the-first object of List.

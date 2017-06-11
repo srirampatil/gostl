@@ -13,7 +13,7 @@ func TestQueue(t *testing.T) {
 		op    OpType
 		value interface{}
 	}{
-		{op: NEW, value: container.ContainerTypeList},
+		{op: NEW, value: container.NewList()},
 		{op: EMPTY, value: true},
 		{op: SIZE, value: 0},
 		{op: PUSH, value: 1},
@@ -32,7 +32,7 @@ func TestQueue(t *testing.T) {
 		{op: POP},
 		{op: FRONT, value: 2},
 		{op: BACK, value: 2},
-		{op: NEW, value: container.ContainerTypeDeque},
+		{op: NEW, value: container.NewDeque(0)},
 		{op: EMPTY, value: true},
 		{op: SIZE, value: 0},
 		{op: PUSH, value: 1},
@@ -57,9 +57,8 @@ func TestQueue(t *testing.T) {
 	for i, c := range cases {
 		switch c.op {
 		case NEW:
-			cType := c.value.(container.ContainerType)
-			fmt.Printf("-----Running Queue tests with container %v-----\n", cType)
-			q = adaptor.NewQueue(cType)
+			fmt.Printf("-----Running Queue tests with container %T-----\n", c.value)
+			q = adaptor.NewQueue(c.value.(adaptor.QueueContainer))
 		case EMPTY:
 			CheckExpected(t, i, q.Empty(), c.value)
 		case SIZE:
